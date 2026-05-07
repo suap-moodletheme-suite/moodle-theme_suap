@@ -19,7 +19,7 @@ a:hover {
 
 .page-item.active .page-link {
     background-color: var(--primary);
-    border: var(--primary);
+    border-color: var(--primary);
 }
 
 #region-main {
@@ -106,7 +106,7 @@ a:hover {
     }
 
     .drawer-toggler:not(#user-toggler) .counter-label {
-        white-space: wrap;
+        white-space: normal;
     }
 }
 
@@ -458,7 +458,7 @@ body.path-mod.pagelayout-incourse .max-width-suap
 
 .usp-finish input[type=submit], .usp-search-btn {
     background-color: var(--primary);
-    border-radius: 40px;
+    border-radius: 2.5rem;
     border: none;
     color: white;
     font: var(--font-button2);
