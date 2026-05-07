@@ -19,7 +19,7 @@ class course_renderer extends \core_course_renderer
      */
     public function course_info_box(stdClass $course)
     {
-        global $OUTPUT, $DB;
+        global $OUTPUT, $DB, $CFG;
         // Pega os custom fields que tiver no curso
         $handler = course_handler::create();
         $datas = $handler->get_instance_data($course->id, true);
@@ -46,13 +46,13 @@ class course_renderer extends \core_course_renderer
         foreach ($enrolment_methods as $method) {
             $enrolment_types[] = $method->enrol;
             if ($method->enrol === 'self' && $method->status == ENROL_INSTANCE_ENABLED) {
-                $requires_password = !empty($method->password);
+                $require_password = !empty($method->password);
 
                 $self_enrolment = [
                     'id' => $course->id,
                     'instance' => $method->id,
                     'sesskey' => sesskey(),
-                    'require_password' => $requires_password
+                    'require_password' => $require_password
                 ];
             }
         };
