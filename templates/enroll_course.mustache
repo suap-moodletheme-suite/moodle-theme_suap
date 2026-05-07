@@ -81,9 +81,11 @@
                 {{#str}}instructor, theme_suap{{/str}}
             {{/are_teachers}}
         </a></li>
+        {{#has_rating_plugin}}
         <li><a class="nav-link" data-toggle="pill" href="#course-reviews">
             {{#str}}comments, theme_suap{{/str}}
         </a></li>
+        {{/has_rating_plugin}}
     </ul>
 
     <div class="tab-content">
@@ -117,9 +119,11 @@
                 </div>
             {{/teachers}}
         </div>
+        {{#has_rating_plugin}}
         <div id="course-reviews" class="tab-pane fade">
             <input type="hidden" id="courseid" value="{{course_id}}">
             <div id="plugin_block_ratings_container"></div>
         </div>
+        {{/has_rating_plugin}}
     </div>
 </div>

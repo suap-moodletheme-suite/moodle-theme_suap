@@ -77,6 +77,13 @@ class course_renderer extends \core_course_renderer
         // Get the current language course
         $lang_data = $OUTPUT->get_lang_menu_data();
 
+        // Verifica se o plugin de avaliação de curso em bloco está presente
+        $coursecontext = \context_course::instance($course->id);
+        $has_rating_plugin = $DB->record_exists('block_instances', [
+            'blockname' => 'course_rating',
+            'parentcontextid' => $coursecontext->id
+        ]);
+
         $templatecontext = [
             'fullcoursename' => $course->fullname,
             'summary' => $course->summary,
@@ -90,6 +97,7 @@ class course_renderer extends \core_course_renderer
             'course_id' => $course->id,
             'langactivename' => $lang_data['langactivename'],
             'isguestuser' => isguestuser(),
+            'has_rating_plugin' => $has_rating_plugin
         ];
         echo $OUTPUT->render_from_template('theme_suap/enroll_course', $templatecontext);
     }
