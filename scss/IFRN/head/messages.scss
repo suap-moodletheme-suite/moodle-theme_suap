@@ -106,7 +106,10 @@
             font: var(--font-heading3);
         }
         .status-contact {
-            font: var(--font-heading5);
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.4;
+            font-family: var(--font-family-base);
             color: var(--dark-light);
         }
         button {
