@@ -19,7 +19,7 @@ class course_renderer extends \core_course_renderer
      */
     public function course_info_box(stdClass $course)
     {
-        global $OUTPUT, $DB;
+        global $OUTPUT, $DB, $CFG;
         // Pega os custom fields que tiver no curso
         $handler = course_handler::create();
         $datas = $handler->get_instance_data($course->id, true);
