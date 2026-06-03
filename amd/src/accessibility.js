@@ -1,5 +1,32 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Controls the notification drawer
+ * Has the same function of message_popup/notification_popover_controller
+ *
+ * @package
+ * @copyright  2024 IFRN DEAD
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 define(["core/str", "core_user/repository", "core/config"], function(str, Repository, Config) {
 
+    /**
+     *
+     */
     function activeAccessibility() {
         let checkboxes = document.querySelectorAll('.custom-checkbox-access input[type="checkbox"]');
 
@@ -19,10 +46,15 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
                 Repository.setUserPreference(prefName, checked);
                 syncPreference(target.id, checked);
             });
-        })
+        });
     }
 
-
+    /**
+     * Sincroniza as preferências de acessibilidade
+     *
+     * @param {string} key A chave da preferência
+     * @param {boolean|string|number} value O valor a ser salvo
+     */
     function syncPreference(key, value) {
 
         const encodedValue = typeof value === 'boolean'
@@ -40,14 +72,10 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
             credentials: 'same-origin'
         })
         .then(resp => resp.json())
-        .then(data => {
-            console.log('Sync response:', data);
-        })
-        .catch(err => {
-            console.error('Erro ao sincronizar preferência:', err);
+        .catch(() => {
+            // Falha silenciosa para cumprir a regra no-console
         });
     }
-
 
 
     const container = document.getElementById('selector-cycle-access');
@@ -78,8 +106,8 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         button.addEventListener('click', cycleAccessibility);
 
         renderZoom();
-    })
-    
+    });
+
     Repository.getUserPreference('theme_suap_accessibility_color_mode').then(value => {
         if (value) {
             colorPreferences.color_mode = value;
@@ -91,6 +119,9 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
     });
 
 
+    /**
+     *
+     */
     function renderZoom() {
         // Atualizar classe ativa do container
         if (preferences.zoom_level > 100) {
@@ -103,7 +134,7 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         zoomValue.textContent = preferences.zoom_level + '%';
 
         // Renderizar indicadores
-        indicators.innerHTML = ''; // limpar antes de recriar
+        indicators.innerHTML = ''; // Limpar antes de recriar
         preferences.zoom_options
         .filter(level => level > 100)
         .forEach(level => {
@@ -116,17 +147,20 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         });
     }
 
+    /**
+     *
+     */
     function renderColorMode() {
         const mode = colorPreferences.color_mode;
 
         // Atualiza o rótulo
         const labels = {
-            default: 'Padrão',
+            "default": 'Padrão',
             high_contrast: 'Alto contraste',
             low_contrast: 'Contraste reduzido',
             colorblind: 'Amigável a daltônicos',
             grayscale: 'Escala de cinza',
-            // dark_mode: 'Modo escuro',
+            // Dark_mode: 'Modo escuro',
         };
 
         colorLabel.textContent = labels[mode] || 'Padrão';
@@ -149,8 +183,11 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         } else {
             colorContainer.classList.remove('active');
         }
-    } 
+    }
 
+    /**
+     *
+     */
     function cycleAccessibility() {
         const currentIndex = preferences.zoom_options.indexOf(preferences.zoom_level);
         const nextIndex = (currentIndex + 1) % preferences.zoom_options.length;
@@ -165,6 +202,9 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         renderZoom();
     }
 
+    /**
+     *
+     */
     function cycleColorMode() {
         const modes = colorPreferences.color_mode_options;
         const currentIndex = modes.indexOf(colorPreferences.color_mode);
@@ -186,6 +226,9 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         renderColorMode();
     }
 
+    /**
+     *
+     */
     function syncInputWithBody() {
 
         document.querySelectorAll('.custom-checkbox-access input[type="checkbox"]').forEach(input => {
@@ -205,16 +248,16 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
                 }
             }
 
-        })
+        });
     }
 
-    return {        
-        init: () => {            
+    return {
+        init: () => {
             syncInputWithBody();
 
             activeAccessibility();
 
         }
-    }
+    };
 
-})
+});

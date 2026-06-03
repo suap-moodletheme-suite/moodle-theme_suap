@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(["core_user/repository"], function (RepositoryUser) {
+define(["core_user/repository"], function(RepositoryUser) {
     const body = document.body;
     const breakpointSM = 768;
     let backdrop = document.querySelector('[data-region="suap-backdrop"]');
@@ -52,14 +52,14 @@ define(["core_user/repository"], function (RepositoryUser) {
         }
 
         clearDrawerPreference();
-    }
+    };
 
     const clearDrawerPreference = () => {
         RepositoryUser.setUserPreference(preferenceIndexDrawer, false);
         RepositoryUser.setUserPreference(preferenceBlocksDrawer, false);
-    }
+    };
 
-    //Abre gaveta clicada e fecha outras que estiverem abertas
+    // Abre gaveta clicada e fecha outras que estiverem abertas
     var openDrawer = (toggler) => {
         toggler.addEventListener("click", () => {
             let drawerId = toggler.getAttribute("data-drawer");
@@ -71,7 +71,7 @@ define(["core_user/repository"], function (RepositoryUser) {
                 return;
             }
 
-            if (drawer.classList.contains('active-drawer')) { //close drawer
+            if (drawer.classList.contains('active-drawer')) { // Close drawer
                 drawer.classList.remove('active-drawer');
                 toggler.classList.remove('active-toggler');
 
@@ -82,25 +82,25 @@ define(["core_user/repository"], function (RepositoryUser) {
                 }
 
                 clearDrawerPreference();
-            } else { //open drawer
+            } else { // Open drawer
                 if (currentDrawers && currentDrawers.length) {
                     closeAllDrawers(currentDrawers);
                 }
                 setDrawerPreference(drawerId);
                 drawer.classList.add('active-drawer');
                 toggler.classList.add('active-toggler');
-                
+
                 if (window.innerWidth <= breakpointSM) {
                     body.classList.remove('counter-open-mobile');
                     body.classList.add('drawer-open-mobile');
                 } else {
                     body.classList.add('drawer-open');
-                }          
+                }
             }
         });
-    }
+    };
 
-    var closeAllDrawers = function (drawers) {
+    var closeAllDrawers = function(drawers) {
         if (window.innerWidth <= breakpointSM) {
             body.classList.remove("drawer-open-mobile");
         } else {
@@ -153,11 +153,11 @@ define(["core_user/repository"], function (RepositoryUser) {
 
     var init = function() {
 
-        if(searchForm) {
+        if (searchForm) {
             const searchSubmit = searchForm.querySelector('.search-js');
             const searchInput = searchForm.querySelector('.input-js');
             searchSubmit.addEventListener('click', () => {
-                if (window.innerWidth <= breakpointSM && 
+                if (window.innerWidth <= breakpointSM &&
                     !body.classList.contains('counter-open-mobile')) {
                     closeAllDrawers(drawers);
                 }
@@ -172,22 +172,22 @@ define(["core_user/repository"], function (RepositoryUser) {
             });
         }
 
-        if(window.innerWidth <= breakpointSM) {
+        if (window.innerWidth <= breakpointSM) {
             closeAllDrawers(drawers);
         }
 
         // Caso o usuário diminua largura e esteja com counter e drawer abertas
         window.addEventListener('resize', function() {
-            if(window.innerWidth <= breakpointSM && 
-            !body.classList.contains('counter-close') && 
+            if (window.innerWidth <= breakpointSM &&
+            !body.classList.contains('counter-close') &&
             body.classList.contains('drawer-open')) {
                 body.classList.add('counter-close');
             }
         });
 
-        // ao clicar no backdrop fecha counter ou drawers
+        // Ao clicar no backdrop fecha counter ou drawers
         backdrop.addEventListener('click', function(e) {
-            if(e.target === e.currentTarget) {
+            if (e.target === e.currentTarget) {
                 body.classList.remove('counter-open-mobile');
                 if (body.classList.contains('drawer-open-mobile')) {
                     closeAllDrawers(drawers);
@@ -205,14 +205,14 @@ define(["core_user/repository"], function (RepositoryUser) {
                 body.classList.toggle('counter-close');
             }
 
-            // salva a preferência no desktop
-            if(body.classList.contains('counter-close')) {
+            // Salva a preferência no desktop
+            if (body.classList.contains('counter-close')) {
                 RepositoryUser.setUserPreference(preferenceCounter, true);
             } else {
                 RepositoryUser.setUserPreference(preferenceCounter, false);
             }
 
-            if(searchForm) {
+            if (searchForm) {
                 const searchInput = searchForm.querySelector('.input-js');
                 searchInput.value = "";
             }

@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(["jquery", "core_user/repository"], function ($, Repository) {
-    var init = function () {
+define(["jquery", "core_user/repository"], function($, Repository) {
+    var init = function() {
         // Seleciona os elementos do DOM
         const contentpart1 = document.querySelector("#content-part1");
         const countcontent = document.querySelector("#counter-content");
@@ -34,9 +34,9 @@ define(["jquery", "core_user/repository"], function ($, Repository) {
 
         document
             .getElementById("preferCounter")
-            .addEventListener("change", function () {
+            .addEventListener("change", function() {
                 if (this.checked) {
-                    //se estiver selecionado, adiciona as classes e salva no banco de dados
+                    // Se estiver selecionado, adiciona as classes e salva no banco de dados
                     contentpart1.classList.add("content-original");
                     countcontent.classList.add("content-reverse");
                     preferCounterTitle.innerText = "Ativado";
@@ -53,16 +53,14 @@ define(["jquery", "core_user/repository"], function ($, Repository) {
                 }
             });
 
-        Repository.getUserPreference(preferenceName).then(function (result) {
-            //recupera o valor de user preference salva no banco
+        Repository.getUserPreference(preferenceName).then(function(result) {
+            // Recupera o valor de user preference salva no banco
             let preferenceCounter = result;
-
-            console.log(preferenceCounter);
 
             if (preferenceCounter === "1") {
                 preferCounter.checked = true;
                 preferCounterTitle.innerText = 'Ativado';
-            } else {                
+            } else {
                 preferCounter.checked = false;
                 preferCounterTitle.innerText = 'Desativado';
             }

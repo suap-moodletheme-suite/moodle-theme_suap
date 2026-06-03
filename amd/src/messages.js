@@ -21,23 +21,23 @@
  * @copyright  2024 IFRN DEAD
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/ajax', 'core/notification', 'core/templates', 'core_message/message_repository', 
+define(['jquery', 'core/ajax', 'core/notification', 'core/templates', 'core_message/message_repository',
     'core_message/message_drawer_view_conversation_constants',
     'core_message/message_drawer_view_overview', 'core_message/message_drawer_view_overview_section',
     'core/pending', 'core/str'
 ],
 function($, Ajax, Notification, Templates, Repository, Constants, ViewOverview, ViewOverviewSection, Pending, Str) {
-    
+
     const viewOverview = document.querySelector('[data-region="body-container"] [data-region="view-overview"]');
-    
+
     const userid = viewOverview.getAttribute('data-user-id');
     const toggleMessages = document.querySelector('[data-drawer="drawer-messages"]');
-    
+
     const viewAll = viewOverview.querySelectorAll('[data-region="view-overview-all-messages"]');
-    
+
     const listItems = viewAll[1].querySelector('[data-region="content-container"]');
     const listPlaceholder = viewAll[1].querySelector('[data-region="placeholder-container"]');
-    
+
     var CONVERSATION_TYPES = Constants.CONVERSATION_TYPES;
 
     var TEMPLATES = {
@@ -71,21 +71,21 @@ function($, Ajax, Notification, Templates, Repository, Constants, ViewOverview, 
     var keepOpenView = function(viewOverview) {
         let lazyView = viewOverview[1].querySelector('[data-region="lazy-load-list"]');
         let clickCount = 0;
-        
+
         viewOverview[0].addEventListener('click', () => {
             if (clickCount > 0) {
-                viewOverview[1].classList.remove('expanded')
-                lazyView.classList.remove('show')
+                viewOverview[1].classList.remove('expanded');
+                lazyView.classList.remove('show');
             }
             clickCount++;
-        })
+        });
     };
 
     var getConversation = function() {
         var originalButton = document.getElementById('message-user-button');
         var customButton = document.getElementById('suap-message-user-button');
         if (originalButton && customButton) {
-            customButton.addEventListener('click', function (e) {
+            customButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 originalButton.click(); // Simulate a click on Moodle's native message button
             });
@@ -157,7 +157,7 @@ function($, Ajax, Notification, Templates, Repository, Constants, ViewOverview, 
         var mapPromises = conversations.map(function(conversation) {
 
             var lastMessage = conversation.messages.length ? conversation.messages[conversation.messages.length - 1] : null;
-            // console.log(lastMessage);
+            // Console.log(lastMessage);
 
             return formatMessagePreview(lastMessage)
                 .then(function(messagePreview) {
@@ -222,19 +222,19 @@ function($, Ajax, Notification, Templates, Repository, Constants, ViewOverview, 
             }).catch(function(error) {
                 pending.resolve();
                 Notification.exception(error);
-            });       
+            });
     };
 
     var init = function() {
-        //EventListener botões grupos de conversas
+        // EventListener botões grupos de conversas
         viewAll[0].addEventListener('click', () => {
 
             Repository.getConversations(2, null, null, null, null, true)
             .then(function(conversations) {
-                
+
                 render(conversations.conversations, userid)
                 .then(function(html) {
-                    // listItens.append(html);
+                    // ListItens.append(html);
                     listItems.innerHTML = html;
                     return html;
                 })
@@ -244,12 +244,12 @@ function($, Ajax, Notification, Templates, Repository, Constants, ViewOverview, 
 
             listItems.classList.remove('hidden');
             listPlaceholder.classList.add('hidden');
-        })
-    }
+        });
+    };
 
     return {
         init: init,
         renderUnreadCount: renderUnreadCount,
         getConversation: getConversation
-    }
+    };
 });

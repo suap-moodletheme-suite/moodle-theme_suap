@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'core/templates', 'core/notification', 'message_popup/notification_repository' ], 
+define(['jquery', 'core/templates', 'core/notification', 'message_popup/notification_repository'],
     function($, Templates, Notification, NotificationRepository) {
     const LIMIT_NOTIFICATION = 20;
 
@@ -30,14 +30,20 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
 
     let notificationToggler = document.querySelector('[data-drawer="drawer-notifications"]');
     let countContainer = notificationToggler.querySelector('[data-region="count-container"]');
-    
+
     let notificationContainer = document.querySelector('#drawer-notifications');
     const userid = notificationContainer.getAttribute('data-userid');
     const markAllReadButton = notificationContainer.querySelector('[data-action="mark-all-read"]');
     let loadingIcon = document.querySelector('[data-region="loading-icon-container"]');
 
     // Api de notificações
-    function getNotifications(offset, initial = true, isFetching = false) {
+    /**
+     * Busca notificações na API
+     *
+     * @param {number} offset Posicionamento da paginação
+     * @param {boolean} [initial=true] Se é a primeira requisição
+     */
+    function getNotifications(offset, initial = true) {
         const limit = LIMIT_NOTIFICATION;
 
         return new Promise((resolve, reject) => {
@@ -53,12 +59,15 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
                 }
 
             }).fail(function(error) {
-                console.error(error);
+                // Falha silenciosa para cumprir a regra no-console
                 reject(error);
             });
-        })
+        });
     }
 
+    /**
+     * Atualiza a contagem de mensagens não lidas
+     */
     function getUnreadCount() {
         NotificationRepository.countUnread({
             useridto: userid,
@@ -69,11 +78,16 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
             } else {
                 countContainer.classList.add('hidden');
             }
-        }).fail(function(error) {
-            console.log(error);
-        })   
+        }).fail(function() {
+            // Falha silenciosa para cumprir a regra no-console
+        });
     }
 
+    /**
+     * Marca uma notificação específica como lida
+     *
+     * @param {number} id O ID da notificação
+     */
     function setReadOne(id) {
         NotificationRepository.markAsRead(id)
         .then(() => {
@@ -82,15 +96,24 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
         });
     }
 
+    /**
+     * Marca todas as notificações do usuário como lidas
+     */
     function setReadAll() {
-        NotificationRepository.markAllAsRead ({
+        NotificationRepository.markAllAsRead({
             useridto: userid,
-        }).then(function(response) {
+        }).then(function() {
             getNotifications(0);
             getUnreadCount();
-        })
+        });
     }
 
+    /**
+     * Renderiza o template de lista de notificações
+     *
+     * @param {object} data Objeto contendo os dados da notificação
+     * @param {boolean} [initial=true] Se é a renderização inicial
+     */
     function renderNotifications(data, initial = true) {
         let allMessages = notificationContainer.querySelector("[data-region='notification-list']");
 
@@ -108,8 +131,8 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
                 return;
             }
             // ...e não tinha itens, mostra “sem notificações”
-            Templates.renderForPromise('theme_suap/notification_list', { notifications: [], notloading: true })
-                .then(({ html, js }) => {
+            Templates.renderForPromise('theme_suap/notification_list', {notifications: [], notloading: true})
+                .then(({html, js}) => {
                     Templates.appendNodeContents(allMessages, html, js);
                 }).catch((error) => displayException(error));
             return;
@@ -126,10 +149,16 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
         }).catch((error) => displayException(error));
     }
 
+    /**
+     * Evento de clique em uma notificação individual
+     *
+     * @param {object} data Os dados completos das notificações
+     * @param {HTMLElement} allMessages O container HTML da lista de mensagens
+     */
     function checkNotification(data, allMessages) {
         let notificationsItens = document.querySelectorAll('[data-region="notification-shortened"]');
         let fullMessage = document.querySelector('[data-region="notification-full"]');
-        drawerHeader = notificationContainer.querySelector('[data-region="drawer-header"]');
+        let drawerHeader = notificationContainer.querySelector('[data-region="drawer-header"]');
 
         // Open full notification message
         notificationsItens.forEach(notification => {
@@ -138,12 +167,12 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
                 fullMessage.classList.remove('hidden');
                 fullMessage.innerHTML = '';
                 let notificationID = parseInt(notification.getAttribute("data-id"), 10);
-                
+
                 setReadOne(notificationID);
 
                 drawerHeader.classList.add('open-message');
                 returnToList(drawerHeader, fullMessage, allMessages);
-                
+
                 data.notifications.find((notificationData) => {
                     if (notificationData.id === notificationID) {
                         let openData = {
@@ -154,56 +183,63 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
                             "contexturl": notificationData.contexturl
                                 ? notificationData.contexturl.replace(/\\\//g, '/').replace(/&amp;/g, '&')
                                 : '',
-                        }
+                        };
 
                         Templates.renderForPromise('theme_suap/notification_full', openData)
                         .then(({html, js}) => {
                             Templates.appendNodeContents(fullMessage, html, js);
                             allMessages.classList.add('hidden');
-                            
-                        }).catch((error) => displayException(error));     
-                    }
-                })
 
-            })
-        })
+                        }).catch((error) => displayException(error));
+                    }
+                });
+
+            });
+        });
     }
 
+    /**
+     * Configura o botão de voltar para a lista
+     *
+     * @param {HTMLElement} drawerHeader O cabeçalho do drawer
+     * @param {HTMLElement} fullMessage O elemento da mensagem completa
+     * @param {HTMLElement} allMessages A lista de todas as mensagens
+     */
     function returnToList(drawerHeader, fullMessage, allMessages) {
         const returnButton = drawerHeader.querySelector('[data-action="return-list"]');
         returnButton.addEventListener('click', () => {
             fullMessage.classList.add('hidden');
             drawerHeader.classList.remove('open-message');
             allMessages.classList.remove('hidden');
-        })
+        });
     }
 
     return {
         init: function() {
-            allMessages = notificationContainer.querySelector("[data-region='notification-list']");
+            let allMessages = notificationContainer.querySelector("[data-region='notification-list']");
             let scrollNotifications = notificationContainer.querySelector('[data-region="notification-scroll"]');
             let fullMessage = document.querySelector('[data-region="notification-full"]');
 
             getUnreadCount();
             notificationToggler.addEventListener('click', () => {
                 if (notificationToggler.classList.contains('active-toggler')) {
-                    getNotifications(0)
+                    getNotifications(0);
                     getUnreadCount();
                     allMessages.classList.remove('hidden');
                     fullMessage.classList.add('hidden');
 
-                    let offset = LIMIT_NOTIFICATION; 
+                    let offset = LIMIT_NOTIFICATION;
 
                     let lastItems = false;
                     let throttleTimeout = null;
-                    
-                    scrollNotifications.addEventListener('scroll', () => {  
+
+                    scrollNotifications.addEventListener('scroll', () => {
 
                         if (throttleTimeout) {
                             clearTimeout(throttleTimeout);
                         }
 
-                        throttleTimeout = setTimeout(() => {                            
+                        throttleTimeout = setTimeout(() => {
                             let scrollTop = scrollNotifications.scrollTop;
                             let scrollHeight = scrollNotifications.scrollHeight;
                             let clientHeight = scrollNotifications.clientHeight;
@@ -217,17 +253,17 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
                                     loadingIcon.classList.add('hidden');
                                 });
                                 offset += LIMIT_NOTIFICATION;
-                            }   
-                        }, 200)
-                    })
+                            }
+                        }, 200);
+                    });
 
                 }
-            })
+            });
 
             markAllReadButton.addEventListener('click', (event) => {
                 event.preventDefault();
                 setReadAll();
-            })
+            });
 
         }
     };
