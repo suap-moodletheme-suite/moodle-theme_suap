@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -15,10 +29,6 @@ global $DB;
 
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
-
-user_preference_allow_ajax_update('drawer-open-nav', PARAM_ALPHA); # TODO: essa função foi depreciada
-user_preference_allow_ajax_update('drawer-open-index', PARAM_BOOL); # TODO: essa função foi depreciada
-user_preference_allow_ajax_update('drawer-open-block', PARAM_BOOL); # TODO: essa função foi depreciada
 
 if (isloggedin()) {
     $courseindexopen = (get_user_preferences('drawer-open-index', true) == true);
@@ -89,7 +99,7 @@ if (!isloggedin() || isguestuser()) {
     $extraclasses[] = 'counteroff';
 }
 
-//Usuário possui capacidade de editar página
+// Usuário possui capacidade de editar página
 if (
     has_capability('moodle/course:manageactivities', $PAGE->context) ||
     (!isloggedin() || isguestuser())

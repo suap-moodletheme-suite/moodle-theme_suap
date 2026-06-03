@@ -23,7 +23,7 @@ use theme_suap\api\api;
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
  *
- * @package    theme_boost
+ * @package    theme_suap
  * @copyright  2024 DEAD IFRN, https://ead.ifrn.edu.br/portal/
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -73,8 +73,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
     /**
      * Gera o menu de seleção de idiomas com bandeiras.
      *
-     * Esta função obtém a lista de idiomas disponíveis no Moodle, 
-     * identifica o idioma atual e constrói um menu de seleção de idioma 
+     * Esta função obtém a lista de idiomas disponíveis no Moodle,
+     * identifica o idioma atual e constrói um menu de seleção de idioma
      * com as respectivas bandeiras.
      *
      * @return string HTML renderizado do menu de idiomas.
@@ -126,9 +126,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         return [
             'langactive' => $activelanguage, // Língua atualmente selecionada
             'langactivename' => $activelanguagename, // Nome da língua atualmente selecionada
-            'langnodes' => $nodes,          // Lista de idiomas disponíveis
+            'langnodes' => $nodes, // Lista de idiomas disponíveis
         ];
-    
+
         return $this->render_from_template('theme_suap/lang_menu_flags', $data);
     }
 

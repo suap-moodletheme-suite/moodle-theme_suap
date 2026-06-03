@@ -30,8 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/lib/blocklib.php');
 
-function xmldb_theme_suap_migrate($oldversion)
-{
+function xmldb_theme_suap_migrate($oldversion) {
     global $DB;
     return true;
 }

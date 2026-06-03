@@ -17,7 +17,7 @@
 /**
  * A drawer based layout for the boost theme.
  *
- * @package   theme_boost
+ * @package   theme_suap
  * @copyright 2021 Bas Brands
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -111,7 +111,7 @@ if ($pageType == 'enrol-index') {
 }
 
 // Se está no dashboard
-if($pageType == 'my-index') {
+if ($pageType == 'my-index') {
     $extraclasses[] = 'layout-width-expanded';
 }
 
@@ -131,7 +131,7 @@ $customfields_suap_shortnames = [
     'curso_codigo',
     'turma_codigo',
     'disciplina_sigla',
-    'curso_sala_coordenacao'
+    'curso_sala_coordenacao',
 ];
 
 $custom_fields = [];

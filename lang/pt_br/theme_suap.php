@@ -1,43 +1,57 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 // Every file should have GPL and copyright in the header - we skip it in tutorials but you should not skip it for real.
 
-// This line protects the file from being accessed by a URL directly.                                                               
-defined('MOODLE_INTERNAL') || die();                                                                                                
-                                                                                                                                    
-// A description shown in the admin theme selector.                                                                                 
-$string['choosereadme'] = 'O tema SUAP é um tema filho do tema Boost';                
-// The name of our plugin.                                                                                                          
-$string['pluginname'] = 'SUAP';                                                                                                    
-// We need to include a lang string for each block region.                                                                          
+// This line protects the file from being accessed by a URL directly.
+defined('MOODLE_INTERNAL') || die();
+
+// A description shown in the admin theme selector.
+$string['choosereadme'] = 'O tema SUAP é um tema filho do tema Boost';
+// The name of our plugin.
+$string['pluginname'] = 'SUAP';
+// We need to include a lang string for each block region.
 $string['region-side-pre'] = 'Direita';
-// The name of the second tab in the theme settings.                                                                                
-$string['advancedsettings'] = 'Configurações avançadas';                                                                                  
-// The brand colour setting.                                                                                                        
-$string['brandcolor'] = 'Cor da marca';                                                                                             
-// The brand colour setting description.                                                                                            
-$string['brandcolor_desc'] = 'Cor de destaque';     
-// A description shown in the admin theme selector.                                                                                                                                                                                    
-$string['configtitle'] = 'Configurações do tema SUAP';                                                                                          
-// Name of the first settings tab.                                                                                                  
-$string['generalsettings'] = 'Configurações gerais';                                                                                                                                                                                    
-// Preset files setting.                                                                                                            
-$string['presetfiles'] = 'Arquivos adicionais de predefinição de tema';                                                                           
-// Preset files help text.                                                                                                          
+// The name of the second tab in the theme settings.
+$string['advancedsettings'] = 'Configurações avançadas';
+// The brand colour setting.
+$string['brandcolor'] = 'Cor da marca';
+// The brand colour setting description.
+$string['brandcolor_desc'] = 'Cor de destaque';
+// A description shown in the admin theme selector.
+$string['configtitle'] = 'Configurações do tema SUAP';
+// Name of the first settings tab.
+$string['generalsettings'] = 'Configurações gerais';
+// Preset files setting.
+$string['presetfiles'] = 'Arquivos adicionais de predefinição de tema';
+// Preset files help text.
 $string['presetfiles_desc'] = 'Arquivos predefinidos podem ser usados ​​para alterar drasticamente a aparência do tema. Consulte <a href=https://docs.moodle.org/dev/Boost_Presets>Predefinições de Boost</a> para obter informações sobre como criar e compartilhar seus próprios arquivos predefinidos e consulte <a href=http://moodle.net/boost>Repositório de predefinições</a> para predefinições que outras pessoas compartilharam.';
-// Preset setting.                                                                                                                  
-$string['preset'] = 'Tema predefinido';                                                                                                 
-// Preset help text.                                                                                                                
-$string['preset_desc'] = 'Escolha uma predefinição para alterar amplamente a aparência do tema';                                                  
-// Raw SCSS setting.                                                                                                                
-$string['rawscss'] = 'SCSS bruto';                                                                                                    
-// Raw SCSS setting help text.                                                                                                      
-$string['rawscss_desc'] = 'Use este campo para fornecer o código SCSS ou CSS que será injetado no final do style sheet';       
-// Raw initial SCSS setting.                                                                                                        
-$string['rawscsspre'] = 'SCSS inicial bruto';                                                                                         
-// Raw initial SCSS setting help text.                                                                                              
+// Preset setting.
+$string['preset'] = 'Tema predefinido';
+// Preset help text.
+$string['preset_desc'] = 'Escolha uma predefinição para alterar amplamente a aparência do tema';
+// Raw SCSS setting.
+$string['rawscss'] = 'SCSS bruto';
+// Raw SCSS setting help text.
+$string['rawscss_desc'] = 'Use este campo para fornecer o código SCSS ou CSS que será injetado no final do style sheet';
+// Raw initial SCSS setting.
+$string['rawscsspre'] = 'SCSS inicial bruto';
+// Raw initial SCSS setting help text.
 $string['rawscsspre_desc'] = 'Neste campo você pode fornecer o código SCSS de inicialização, ele será injetado antes de tudo. Na maioria das vezes você usará esta configuração para definir variáveis';
 
-// Drawers aditional strings 
+// Drawers aditional strings
 $string['drawer_course_index'] = "Índice da disciplina";
 $string['drawer_blocks'] = "Gaveta de Blocos";
 $string['drawer_user'] = "Menu do usuário";
@@ -55,7 +69,7 @@ $string['increase_cursor_size'] = "Cursor do mouse grande";
 $string['enable_vlibras'] = "Habilitar VLibras";
 $string['high_line_height'] = "Linhas mais distantes";
 
-// Frontpage aditional strings 
+// Frontpage aditional strings
 $string['workload'] = 'Carga horária';
 $string['certificate'] = 'Certificado';
 $string['pt-br'] = 'Português';
@@ -139,7 +153,7 @@ $string['no_badges'] = 'Nenhum emblema para ser exibido';
 // Enrolment aditional strings
 $string['issue_certificate'] = 'Emitir certificado';
 $string['login'] = 'Realizar login';
-$string['no_description_course'] = 'Sem descrição do curso por enquanto'; 
+$string['no_description_course'] = 'Sem descrição do curso por enquanto';
 $string['overview'] = 'Visão geral';
 $string['instructor'] = 'Docente';
 $string['instructors'] = 'Docentes';

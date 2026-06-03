@@ -26,12 +26,11 @@ use html_writer;
 /**
  * Creates a navbar for boost that allows easy control of the navbar items.
  *
- * @package    theme_boost
+ * @package    theme_suap
  * @copyright  2021 Adrian Greeve <adrian@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class boostnavbar extends \theme_boost\boostnavbar {
-
     /**
      * Prepares the navigation nodes for use with boost.
      */
@@ -73,7 +72,7 @@ class boostnavbar extends \theme_boost\boostnavbar {
 
             // Remove the course breadcrumb node.
             if (!str_starts_with($this->page->pagetype, 'section-view-')) {
-                //$this->remove($this->page->course->id, \breadcrumb_navigation_node::TYPE_COURSE);
+                // $this->remove($this->page->course->id, \breadcrumb_navigation_node::TYPE_COURSE);
             }
 
             // Remove the navbar nodes that already exist in the secondary navigation menu.
@@ -135,17 +134,16 @@ class boostnavbar extends \theme_boost\boostnavbar {
 
         // Don't display the navbar if there is only one item. Apparently this is bad UX design.
         // O if foi convertido para retirar o link do item quando for o único
-        
-        if ($this->item_count() <= 1 ) {
-            //$this->clear_items();  
 
-            if (end($this->items) ) {
+        if ($this->item_count() <= 1) {
+            // $this->clear_items();
+
+            if (end($this->items)) {
                 $this->remove_last_item_action();
             }
-            
+
             return;
         }
-
 
         // Make sure that the last item is not a link. Not sure if this is always a good idea.
         $this->remove_last_item_action();
@@ -153,15 +151,14 @@ class boostnavbar extends \theme_boost\boostnavbar {
 
     /**
      * Create breadcrumb for participants page. It's called in navbar.mustache
-    */
+     */
     public function breadcrumb_participants() {
-        if($this->page->pagetype == 'course-view-participants') {
-            $url = new \moodle_url('/course/view.php?id='.$this->page->course->id);
+        if ($this->page->pagetype == 'course-view-participants') {
+            $url = new \moodle_url('/course/view.php?id=' . $this->page->course->id);
             $shortname = $this->page->course->shortname;
-            $link_participants = html_writer::tag('a', $shortname, array('href' => $url));
-            $breadcrumb_participants = html_writer::tag('li', $link_participants , array('class' => 'breadcrumb-item action-item'));
+            $link_participants = html_writer::tag('a', $shortname, ['href' => $url]);
+            $breadcrumb_participants = html_writer::tag('li', $link_participants, ['class' => 'breadcrumb-item action-item']);
             return $breadcrumb_participants;
         }
     }
-
 }

@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace theme_suap\output\core;
 
@@ -6,7 +20,6 @@ use core_course\course;
 use html_writer;
 use stdClass;
 use core_course\external\course_summary_exporter;
-
 use core_course\customfield\course_handler;
 
 class course_renderer extends \core_course_renderer
@@ -17,8 +30,7 @@ class course_renderer extends \core_course_renderer
      * @param stdClass $course
      * @return string
      */
-    public function course_info_box(stdClass $course)
-    {
+    public function course_info_box(stdClass $course) {
         global $OUTPUT, $DB, $CFG;
         // Pega os custom fields que tiver no curso
         $handler = course_handler::create();
@@ -52,7 +64,7 @@ class course_renderer extends \core_course_renderer
                     'id' => $course->id,
                     'instance' => $method->id,
                     'sesskey' => sesskey(),
-                    'require_password' => $require_password
+                    'require_password' => $require_password,
                 ];
             }
         };
@@ -63,7 +75,7 @@ class course_renderer extends \core_course_renderer
 
         foreach ($teachers as $teacher) {
             $record = $DB->get_record("user", ["id" => $teacher['user']->id]);
-            $record->pic =  $OUTPUT->user_picture($record, ['size' => 100, 'link' => true]);
+            $record->pic = $OUTPUT->user_picture($record, ['size' => 100, 'link' => true]);
 
             $list_teachers[] = $record;
         }
@@ -81,7 +93,7 @@ class course_renderer extends \core_course_renderer
         $coursecontext = \context_course::instance($course->id);
         $has_rating_plugin = $DB->record_exists('block_instances', [
             'blockname' => 'course_rating',
-            'parentcontextid' => $coursecontext->id
+            'parentcontextid' => $coursecontext->id,
         ]);
 
         $templatecontext = [
@@ -97,7 +109,7 @@ class course_renderer extends \core_course_renderer
             'course_id' => $course->id,
             'langactivename' => $lang_data['langactivename'],
             'isguestuser' => isguestuser(),
-            'has_rating_plugin' => $has_rating_plugin
+            'has_rating_plugin' => $has_rating_plugin,
         ];
         echo $OUTPUT->render_from_template('theme_suap/enroll_course', $templatecontext);
     }

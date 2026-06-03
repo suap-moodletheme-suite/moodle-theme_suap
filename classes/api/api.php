@@ -1,9 +1,25 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
 /**
  * Class used to return information to display for the message area.
  *
  * @copyright  2024 DEAD IFRN
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package theme_suap
  */
 
 namespace theme_suap\api;
@@ -13,7 +29,6 @@ namespace theme_suap\api;
 defined('MOODLE_INTERNAL') || die();
 
 class api {
-
     /**
      * The action for reading a message.
      */
@@ -109,7 +124,7 @@ class api {
             self::MESSAGE_ACTION_READ,
             self::MESSAGE_ACTION_DELETED,
             $userid,
-            $userid
+            $userid,
         ]);
 
         $conversations = [];
@@ -118,7 +133,7 @@ class api {
                 'conversationid' => $unreadconv->conversationid,
                 'unreadcount' => $unreadconv->unreadcount,
                 'smallmessage' => $unreadconv->smallmessage,
-                'fullmessage' => $unreadconv->fullmessage,  
+                'fullmessage' => $unreadconv->fullmessage,
                 'timecreated' => userdate($unreadconv->timecreated),
                 'sendername' => $unreadconv->firstname . ' ' . $unreadconv->lastname,
             ];
@@ -126,5 +141,4 @@ class api {
 
         return $conversations;
     }
-
 }
