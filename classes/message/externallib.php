@@ -17,7 +17,7 @@
 /**
  * External message API
  *
- * @package    core_message
+ * @package    theme_suap
  * @category   external
  * @copyright  2011 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -52,9 +52,8 @@ require_once($CFG->dirroot . "/message/externallib.php");
  * @since Moodle 2.2
  */
 
-//  core_message_external
+// core_message_external
 class theme_suap_external extends \core_message_external {
-
     /**
      * Get conversations parameters.
      *
@@ -63,9 +62,9 @@ class theme_suap_external extends \core_message_external {
      */
     public static function get_all_unread_conversations_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'userid' => new external_value(PARAM_INT, 'The id of the user who we are viewing conversations for'),
-            )
+            ]
         );
     }
 
@@ -91,9 +90,9 @@ class theme_suap_external extends \core_message_external {
             throw new moodle_exception('disabled', 'message');
         }
 
-        $params = array(
+        $params = [
             'userid' => $userid,
-        );
+        ];
         $params = self::validate_parameters(self::get_conversations_parameters(), $params);
 
         // $systemcontext = context_system::instance();
@@ -106,7 +105,6 @@ class theme_suap_external extends \core_message_external {
         $conversations = api::get_all_unread_conversations(
             $params['userid'],
         );
-
 
         return ['conversations' => $conversations];
     }
@@ -124,20 +122,20 @@ class theme_suap_external extends \core_message_external {
                     new external_single_structure(
                         [
                             'conversationid' => new external_value(PARAM_INT, 'The conversation id'),
-                            'unreadcount' => new external_value(PARAM_INT, 'The number of unread messages in this conversation',
-                            VALUE_DEFAULT, null),
+                            'unreadcount' => new external_value(
+                                PARAM_INT,
+                                'The number of unread messages in this conversation',
+                                VALUE_DEFAULT,
+                                null
+                            ),
                             'smallmessage' => new external_value(PARAM_RAW, 'A subtitle for the conversation name, if set', VALUE_DEFAULT, null),
                             'fullmessage' => new external_value(PARAM_RAW, 'A subtitle for the conversation name, if set', VALUE_DEFAULT, null),
                             'timecreated' => new external_value(PARAM_RAW, 'A subtitle for the conversation name, if set', VALUE_DEFAULT, null),
                             'sendername' => new external_value(PARAM_RAW, 'A subtitle for the conversation name, if set', VALUE_DEFAULT, null),
                         ]
                     )
-                )
+                ),
             ]
         );
-
     }
-
-
-
 }

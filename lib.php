@@ -1,14 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 // Every file should have GPL and copyright in the header - we skip it in tutorials but you should not skip it for real.
 
-// This line protects the file from being accessed by a URL directly.                                                               
+// This line protects the file from being accessed by a URL directly.
 defined('MOODLE_INTERNAL') || die();
 
 // We will add callbacks here as we add features to our theme.
 
-function theme_suap_get_main_scss_content($theme)
-{
+function theme_suap_get_main_scss_content($theme) {
     global $CFG;
 
     $scss = '';
@@ -17,38 +30,37 @@ function theme_suap_get_main_scss_content($theme)
 
     $context = context_system::instance();
     if ($filename == 'default.scss') {
-        // We still load the default preset files directly from the boost theme. No sense in duplicating them.                      
+        // We still load the default preset files directly from the boost theme. No sense in duplicating them.
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/default.scss');
     } else if ($filename == 'plain.scss') {
-        // We still load the default preset files directly from the boost theme. No sense in duplicating them.                      
+        // We still load the default preset files directly from the boost theme. No sense in duplicating them.
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/plain.scss');
     } else if ($filename && ($presetfile = $fs->get_file($context->id, 'theme_suap', 'preset', 0, '/', $filename))) {
-        // This preset file was fetched from the file area for theme_suap and not theme_boost (see the line above).                
+        // This preset file was fetched from the file area for theme_suap and not theme_boost (see the line above).
         $scss .= $presetfile->get_content();
     } else {
-        // Safety fallback - maybe new installs etc.                                                                                
+        // Safety fallback - maybe new installs etc.
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/default.scss');
     }
 
-    // Pre CSS - this is loaded AFTER any prescss from the setting but before the main scss.                                        
+    // Pre CSS - this is loaded AFTER any prescss from the setting but before the main scss.
     $pre = file_get_contents($CFG->dirroot . '/theme/suap/scss/pre.scss');
 
     // Pre SCSS customizado via interface
     $precustom = !empty($theme->settings->rawscsspre) ? $theme->settings->rawscsspre : '';
 
-    // Post CSS - this is loaded AFTER the main scss but before the extra scss from the setting.                                    
+    // Post CSS - this is loaded AFTER the main scss but before the extra scss from the setting.
     $post = file_get_contents($CFG->dirroot . '/theme/suap/scss/post.scss');
 
     // Post SCSS customizado via interface
     $postcustom = !empty($theme->settings->rawscss) ? $theme->settings->rawscss : '';
 
-    // Combine them together.                                                                                                       
+    // Combine them together.
     return $pre . "\n" . $precustom . "\n" . $scss . "\n" . $post . "\n" . $postcustom;
 }
 
 // Essa função é responsável por transformar uma configtextarea(label, link, icon, target e capabilities) em um objeto.
-function parse_configtextarea_string($config_string)
-{
+function parse_configtextarea_string($config_string) {
     $default_value = 'N/A';
     $lines = explode("\n", trim($config_string));
     $result = [];
@@ -73,7 +85,7 @@ function parse_configtextarea_string($config_string)
             'link' => $parts[1],
             'icon' => $parts[2],
             'target' => $parts[3],
-            'capabilities' => $parts[4]
+            'capabilities' => $parts[4],
         ];
     }
 
@@ -84,9 +96,9 @@ function parse_configtextarea_string($config_string)
  * Get the current user preferences that are available
  *
  * @return array[]
+ * @package theme_suap
  */
-function theme_suap_user_preferences(): array
-{
+function theme_suap_user_preferences(): array {
     return [
         'visual_preference' => [
             'type' => PARAM_BOOL,
@@ -181,6 +193,7 @@ function theme_suap_user_preferences(): array
  *
  * @param stdClass $user O objeto de usuário atual (geralmente $USER).
  * @return array Lista de classes CSS para aplicar no <body>.
+ * @package theme_suap
  */
 function theme_suap_get_accessibility_classes($user) {
     global $USER;
@@ -226,9 +239,9 @@ function theme_suap_get_accessibility_classes($user) {
  *
  * @param array $items O array de itens para adicionar os links.
  * @return array O array atualizado com os itens de administrador.
+ * @package theme_suap
  */
-function theme_suap_add_admin_items_user_menu(): ?array
-{
+function theme_suap_add_admin_items_user_menu(): ?array {
     global $CFG;
     $items = [];
     if (is_siteadmin()) {
@@ -236,22 +249,21 @@ function theme_suap_add_admin_items_user_menu(): ?array
             'link' => [
                 'title' => get_string('administrationsite', 'core'),
                 'url' => $CFG->wwwroot . '/admin/search.php',
-            ]
+            ],
         ];
 
         $items[] = [
             'link' => [
                 'title' => get_string('mycourses', 'core'),
                 'url' => $CFG->wwwroot . '/my/courses.php',
-            ]
+            ],
         ];
     }
 
     return $items;
 }
 
-function theme_suap_is_contentbutton_active()
-{
+function theme_suap_is_contentbutton_active() {
     global $PAGE;
     $context_now = $PAGE->context;
 

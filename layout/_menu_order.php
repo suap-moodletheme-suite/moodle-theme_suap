@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
 defined('MOODLE_INTERNAL') || die();
 
 $_menu_items = &$primarymenu["user"]["items"];
@@ -22,10 +37,10 @@ $langs = \get_string_manager()->get_list_of_translations();
 $_submenu_items = &$primarymenu["user"]["submenus"][0]->items;
 
 for ($i = 0; $i < count($_submenu_items); $i++) {
-    if ($_submenu_items[$i]['title'] == $langs['en']):
+    if ($_submenu_items[$i]['title'] == $langs['en']) :
         $_submenu_items[$i]['text'] .= ' 🇺🇸';
     endif;
-    if (array_key_exists('pt_br', $langs) && $langs['pt_br'] == $_submenu_items[$i]['title']):
+    if (array_key_exists('pt_br', $langs) && $langs['pt_br'] == $_submenu_items[$i]['title']) :
         $_submenu_items[$i]['text'] .= ' 🇧🇷';
     endif;
 }

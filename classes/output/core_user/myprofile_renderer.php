@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
 /**
  *
  * @package    theme_suap
@@ -12,22 +27,21 @@ use core_user\output\myprofile\tree;
 use core_user\output\myprofile\manager;
 
 class myprofile_renderer extends base_renderer {
-
     public function get_user_certificates($userid) {
         global $DB;
 
         $manager = $DB->get_manager();
 
-        $all_certificates = array();
+        $all_certificates = [];
 
         // Get user certificates (plugin Course Certificates)
         if ($manager->table_exists('tool_certificate_issues')) {
-            $tool_certificates = $DB->get_records('tool_certificate_issues', array('userid' => $userid));
+            $tool_certificates = $DB->get_records('tool_certificate_issues', ['userid' => $userid]);
         }
 
         // Get user certificates (plugin Custom certificates)
         if ($manager->table_exists('customcert_issues')) {
-            $custom_certificates = $DB->get_records('customcert_issues', array('userid' => $userid));
+            $custom_certificates = $DB->get_records('customcert_issues', ['userid' => $userid]);
         }
 
         if (!empty($tool_certificates)) {
@@ -49,32 +63,31 @@ class myprofile_renderer extends base_renderer {
                 $cert_url_encoded = urlencode($cert_url->__toString());
                 $linkedin_url = "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name={$certificate_name}&organizationName={$sitename}&issueYear={$createdYear}&issueMonth={$createdMonth}&expirationYear={$expirationYear}&expirationMonth={$expirationMonth}&certId={$cert->code}&certUrl={$cert_url_encoded}";
 
-                $all_certificates[] = array(
+                $all_certificates[] = [
                     'certificateid' => $cert->id,
                     'datereceived' => date('d/m/Y', $cert->timecreated),
                     'name' => $certificate_name,
                     'link' => $fileurl,
-                    'linkedin_url' => $linkedin_url
-                );
+                    'linkedin_url' => $linkedin_url,
+                ];
             }
         }
 
         if (!empty($custom_certificates)) {
             foreach ($custom_certificates as $cert) {
-                $certificate_name = $DB->get_field('customcert', 'name', array('id' => $cert->customcertid));
+                $certificate_name = $DB->get_field('customcert', 'name', ['id' => $cert->customcertid]);
 
-
-                $all_certificates[] = array(
+                $all_certificates[] = [
                     'certificateid' => $cert->customcertid,
                     'dateraw' => $cert->timecreated,
                     'datereceived' => date('d/m/Y', $cert->timecreated),
                     'name' => $certificate_name,
-                    'link' => new \moodle_url('/mod/customcert/my_certificates.php', array(
+                    'link' => new \moodle_url('/mod/customcert/my_certificates.php', [
                         'userid' => $userid,
                         'certificateid' => $cert->customcertid,
-                        'downloadcert' => 1
-                    ))
-                );
+                        'downloadcert' => 1,
+                    ]),
+                ];
             }
         }
 
@@ -91,16 +104,16 @@ class myprofile_renderer extends base_renderer {
         require_once($CFG->libdir . '/badgeslib.php');
 
         $badges = badges_get_user_badges($userid);
-        $badges_formated = array();
+        $badges_formated = [];
 
-        if(empty($badges)) {
+        if (empty($badges)) {
             return false;
         }
 
         foreach ($badges as $badge) {
             $badgeObj = new \badge($badge->id);
             $badge_context = $badgeObj->get_context();
-            $imageurl = \moodle_url::make_pluginfile_url($badge_context->id, 'badges', 'badgeimage', $badge->id, '/', 'f1', FALSE);
+            $imageurl = \moodle_url::make_pluginfile_url($badge_context->id, 'badges', 'badgeimage', $badge->id, '/', 'f1', false);
             $badge_link = new \moodle_url('/badges/badge.php', ['hash' => $badge->uniquehash]);
 
             $createdYear = date('Y', ($badge->timecreated));
@@ -117,14 +130,14 @@ class myprofile_renderer extends base_renderer {
             &organizationName={$badge->issuername}&issueYear={$createdYear}&issueMonth={$createdMonth}&expirationYear={$expirationYear}
             &expirationMonth={$expirationMonth}&certId={$badge->uniquehash}";
 
-            $badges_formated[] = array(
+            $badges_formated[] = [
                 'name' => $badge->name,
                 'description' => $badge->description,
                 'datereceived' => date('d/m/Y', $badge_issued->dateissued),
                 'imageurl' => $imageurl,
                 'link' => $badge_link,
-                'badgelink' => $badge_linkedin
-            );
+                'badgelink' => $badge_linkedin,
+            ];
         }
 
         return $badges_formated;
@@ -162,11 +175,11 @@ class myprofile_renderer extends base_renderer {
             $has_edit_button = true;
         }
 
-        $edit_itens = array(
+        $edit_itens = [
             'id' => $userid,
             'course' => $courseid,
-            'returnto' => 'profile'
-        );
+            'returnto' => 'profile',
+        ];
 
         if ($is_admin) {
             $edit_url = new \moodle_url('/user/editadvanced.php', $edit_itens);
@@ -179,7 +192,6 @@ class myprofile_renderer extends base_renderer {
 
         // Send message button
         if ($USER->id != $userid) {
-
             $message_url = new \moodle_url('/message/index.php', ['id' => $userid]);
         }
 
@@ -210,7 +222,6 @@ class myprofile_renderer extends base_renderer {
         $categories = [];
         $categories_user = [];
         foreach ($tree->categories as $category) {
-
             $categoryname = strtolower($category->name);
 
             if ($categoryname === 'contact' && !$is_admin && !$is_my_profile) {
@@ -219,8 +230,10 @@ class myprofile_renderer extends base_renderer {
 
             if (in_array(strtolower($category->name), ['contact', 'loginactivity', 'coursedetails'])) {
                 $nodes = [];
-                foreach($category->nodes as $node) {
-                    if ($node->name == 'editprofile' || $node->name == 'email') continue;
+                foreach ($category->nodes as $node) {
+                    if ($node->name == 'editprofile' || $node->name == 'email') {
+                        continue;
+                    }
                     if ($node->url) {
                         $url = $node->url->out();
                     } else {
@@ -229,7 +242,7 @@ class myprofile_renderer extends base_renderer {
                     $nodes[] = [
                         'title' => $node->title,
                         'url' => $url,
-                        'content' => $node->content  ?? null,
+                        'content' => $node->content ?? null,
                     ];
                 }
                 $categories_user[] = [
@@ -267,10 +280,9 @@ class myprofile_renderer extends base_renderer {
                 'title' => $category->title,
                 'nodes' => $nodes,
             ];
-
         }
 
-        $PAGE->requires->js_call_amd('theme_suap/messages', 'getConversation'); 
+        $PAGE->requires->js_call_amd('theme_suap/messages', 'getConversation');
 
         $data = [
             'userfullname' => fullname($user),
@@ -289,7 +301,7 @@ class myprofile_renderer extends base_renderer {
             'is_my_profile' => $is_my_profile,
 
             'categories' => $categories,
-            'categories_user' => $categories_user
+            'categories_user' => $categories_user,
         ];
 
         $PAGE->requires->js_call_amd('theme_suap/profile', 'init');
