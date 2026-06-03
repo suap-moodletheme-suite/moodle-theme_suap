@@ -57,8 +57,6 @@ define(["jquery", "core_user/repository"], function($, Repository) {
             // Recupera o valor de user preference salva no banco
             let preferenceCounter = result;
 
-            console.log(preferenceCounter);
-
             if (preferenceCounter === "1") {
                 preferCounter.checked = true;
                 preferCounterTitle.innerText = 'Ativado';

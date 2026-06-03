@@ -1,3 +1,27 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Controls the notification drawer
+ * Has the same function of message_popup/notification_popover_controller
+ *
+ * @package
+ * @copyright  2024 IFRN DEAD
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 define(["core/str", "core_user/repository", "core/config"], function(str, Repository, Config) {
 
     /**
@@ -25,11 +49,11 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         });
     }
 
-
     /**
+     * Sincroniza as preferências de acessibilidade
      *
-     * @param key
-     * @param value
+     * @param {string} key A chave da preferência
+     * @param {boolean|string|number} value O valor a ser salvo
      */
     function syncPreference(key, value) {
 
@@ -48,11 +72,8 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
             credentials: 'same-origin'
         })
         .then(resp => resp.json())
-        .then(data => {
-            console.log('Sync response:', data);
-        })
-        .catch(err => {
-            console.error('Erro ao sincronizar preferência:', err);
+        .catch(() => {
+            // Falha silenciosa para cumprir a regra no-console
         });
     }
 

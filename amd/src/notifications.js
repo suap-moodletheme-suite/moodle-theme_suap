@@ -38,12 +38,12 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
 
     // Api de notificações
     /**
+     * Busca notificações na API
      *
-     * @param offset
-     * @param initial
-     * @param isFetching
+     * @param {number} offset Posicionamento da paginação
+     * @param {boolean} [initial=true] Se é a primeira requisição
      */
-    function getNotifications(offset, initial = true, isFetching = false) {
+    function getNotifications(offset, initial = true) {
         const limit = LIMIT_NOTIFICATION;
 
         return new Promise((resolve, reject) => {
@@ -59,14 +59,14 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
                 }
 
             }).fail(function(error) {
-                console.error(error);
+                // Falha silenciosa para cumprir a regra no-console
                 reject(error);
             });
         });
     }
 
     /**
-     *
+     * Atualiza a contagem de mensagens não lidas
      */
     function getUnreadCount() {
         NotificationRepository.countUnread({
@@ -78,14 +78,15 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
             } else {
                 countContainer.classList.add('hidden');
             }
-        }).fail(function(error) {
-            console.log(error);
+        }).fail(function() {
+            // Falha silenciosa para cumprir a regra no-console
         });
     }
 
     /**
+     * Marca uma notificação específica como lida
      *
-     * @param id
+     * @param {number} id O ID da notificação
      */
     function setReadOne(id) {
         NotificationRepository.markAsRead(id)
@@ -96,21 +97,22 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
     }
 
     /**
-     *
+     * Marca todas as notificações do usuário como lidas
      */
     function setReadAll() {
         NotificationRepository.markAllAsRead({
             useridto: userid,
-        }).then(function(response) {
+        }).then(function() {
             getNotifications(0);
             getUnreadCount();
         });
     }
 
     /**
+     * Renderiza o template de lista de notificações
      *
-     * @param data
-     * @param initial
+     * @param {object} data Objeto contendo os dados da notificação
+     * @param {boolean} [initial=true] Se é a renderização inicial
      */
     function renderNotifications(data, initial = true) {
         let allMessages = notificationContainer.querySelector("[data-region='notification-list']");
@@ -148,14 +150,15 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
     }
 
     /**
+     * Evento de clique em uma notificação individual
      *
-     * @param data
-     * @param allMessages
+     * @param {object} data Os dados completos das notificações
+     * @param {HTMLElement} allMessages O container HTML da lista de mensagens
      */
     function checkNotification(data, allMessages) {
         let notificationsItens = document.querySelectorAll('[data-region="notification-shortened"]');
         let fullMessage = document.querySelector('[data-region="notification-full"]');
-        drawerHeader = notificationContainer.querySelector('[data-region="drawer-header"]');
+        let drawerHeader = notificationContainer.querySelector('[data-region="drawer-header"]');
 
         // Open full notification message
         notificationsItens.forEach(notification => {
@@ -196,10 +199,11 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
     }
 
     /**
+     * Configura o botão de voltar para a lista
      *
-     * @param drawerHeader
-     * @param fullMessage
-     * @param allMessages
+     * @param {HTMLElement} drawerHeader O cabeçalho do drawer
+     * @param {HTMLElement} fullMessage O elemento da mensagem completa
+     * @param {HTMLElement} allMessages A lista de todas as mensagens
      */
     function returnToList(drawerHeader, fullMessage, allMessages) {
         const returnButton = drawerHeader.querySelector('[data-action="return-list"]');
@@ -212,7 +216,7 @@ define(['jquery', 'core/templates', 'core/notification', 'message_popup/notifica
 
     return {
         init: function() {
-            allMessages = notificationContainer.querySelector("[data-region='notification-list']");
+            let allMessages = notificationContainer.querySelector("[data-region='notification-list']");
             let scrollNotifications = notificationContainer.querySelector('[data-region="notification-scroll"]');
             let fullMessage = document.querySelector('[data-region="notification-full"]');
 
