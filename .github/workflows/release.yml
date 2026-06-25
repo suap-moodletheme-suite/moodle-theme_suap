@@ -43,11 +43,8 @@ jobs:
           unzip -l "${ZIPFILE}" | head -n 40
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./${{ env.ZIPFILE }}
-          asset_name: ${{ env.ZIPFILE }}
-          asset_content_type: application/zip
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" "${ZIPFILE}" --clobber
+
