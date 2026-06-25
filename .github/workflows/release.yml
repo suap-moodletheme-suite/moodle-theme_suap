@@ -12,20 +12,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-
       - name: Setup Theme ZIP file
-        id: setup
         run: |
           COMPONENT='theme_suap'
-          VERSION="${{ github.ref_name }}"
-          echo "ZIPFILE=moodle-${COMPONENT}-${VERSION}.zip" >> $GITHUB_ENV
+          VERSION='${{ github.event.release.tag_name }}'
+          ZIPFILE="moodle-${COMPONENT}-${VERSION}.zip"
 
-      # - name: Build Theme ZIP file
-      #   run: php ./cli/buildthemezip.php moodle-theme_suap ${{ env.ZIPFILE }}
+          echo $ZIPFILE
+
+          echo "ZIPFILE=$ZIPFILE" >> $GITHUB_ENV
+
+          mkdir -p build/suap
+
+          rsync -a ./ build/suap/ \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "build" \
+            --exclude "*.zip"
+
+          cd build
+          zip -r "../${ZIPFILE}" "suap"
+
+          pwd
+          ls -lha ..
+
+      - name: Debug generated files
+        run: |
+          echo "ZIPFILE=${ZIPFILE}"
+          ls -lah .
+          unzip -l "${ZIPFILE}" | head -n 40
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
