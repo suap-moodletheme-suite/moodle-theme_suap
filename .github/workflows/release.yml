@@ -20,11 +20,9 @@ jobs:
       - name: Setup Theme ZIP file
         id: setup
         run: |
-          COMPONENT=$(grep "\$plugin->component" ./version.php | cut -d"'" -f2)
-          VERSION=$(grep "\$plugin->version" ./version.php | cut -d"'" -f2)
-          ZIPFILE=moodle-${COMPONENT}-${VERSION}.zip
-          echo "ZIPFILE=$ZIPFILE" >> $GITHUB_ENV
-          echo "zipfile=$ZIPFILE" >> $GITHUB_OUTPUT
+          COMPONENT='theme_suap'
+          VERSION="${{ github.ref_name }}"
+          echo "ZIPFILE=moodle-${COMPONENT}-${VERSION}.zip" >> $GITHUB_ENV
 
       - name: Build Theme ZIP file
         run: |
