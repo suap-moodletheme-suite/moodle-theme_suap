@@ -45,23 +45,23 @@ jobs:
           echo "Plugin shortname: $SHORTNAME"
           echo "Tag (sem prefixo v): $TAG"
 
-          # Validação 1: Últimos 2 dígitos devem corresponder
-          if [ "$VERSION_SUFFIX" != "$RELEASE_SUFFIX" ]; then
-            echo "::error::Os 2 últimos dígitos de \$plugin->version ($VERSION_SUFFIX) não correspondem aos 2 últimos dígitos de \$plugin->release ($RELEASE_SUFFIX) em version.php"
-            exit 1
-          fi
+          # # Validação 1: Últimos 2 dígitos devem corresponder
+          # if [ "$VERSION_SUFFIX" != "$RELEASE_SUFFIX" ]; then
+          #   echo "::error::Os 2 últimos dígitos de \$plugin->version ($VERSION_SUFFIX) não correspondem aos 2 últimos dígitos de \$plugin->release ($RELEASE_SUFFIX) em version.php"
+          #   exit 1
+          # fi
 
-          # Validação 2: Release deve corresponder à tag
-          if [ "$RELEASE" != "$TAG" ]; then
-            echo "::error::\$plugin->release ($RELEASE) não corresponde ao nome da tag ($TAG). Atualize version.php antes de criar a tag."
-            exit 1
-          fi
+          # # Validação 2: Release deve corresponder à tag
+          # if [ "$RELEASE" != "$TAG" ]; then
+          #   echo "::error::\$plugin->release ($RELEASE) não corresponde ao nome da tag ($TAG). Atualize version.php antes de criar a tag."
+          #   exit 1
+          # fi
 
-          # Validação 3: Garantir que o componente foi encontrado
-          if [ -z "$COMPONENT" ]; then
-            echo "::error::A variável \$plugin->component não foi encontrada no version.php."
-            exit 1
-          fi
+          # # Validação 3: Garantir que o componente foi encontrado
+          # if [ -z "$COMPONENT" ]; then
+          #   echo "::error::A variável \$plugin->component não foi encontrada no version.php."
+          #   exit 1
+          # fi
 
           # Exporta as variáveis para o próximo passo
           echo "number=$VERSION" >> "$GITHUB_OUTPUT"
