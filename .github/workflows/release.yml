@@ -24,9 +24,8 @@ jobs:
           VERSION="${{ github.ref_name }}"
           echo "ZIPFILE=moodle-${COMPONENT}-${VERSION}.zip" >> $GITHUB_ENV
 
-      - name: Build Theme ZIP file
-        run: |
-          php ./cli/buildthemezip.php moodle-theme_suap ${{ env.ZIPFILE }}
+      # - name: Build Theme ZIP file
+      #   run: php ./cli/buildthemezip.php moodle-theme_suap ${{ env.ZIPFILE }}
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
