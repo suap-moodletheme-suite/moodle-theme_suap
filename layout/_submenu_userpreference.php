@@ -18,6 +18,10 @@ defined('MOODLE_INTERNAL') || die();
 
 $preferences_submenu = [
     [
+        'title' => get_string('preference_panel', 'theme_suap'),
+        'url' => '/user/preferences.php',
+    ],
+    [
         'title' => get_string('externalblogs', 'blog'),
         'url' => '/blog/external_blogs.php',
     ],
@@ -61,7 +65,7 @@ $preferences_submenu = [
     ],
     [
         'title' => get_string('notificationpreferences', 'message'),
-        'url' => '/message/edit.php',
+        'url' => '/message/notificationpreferences.php?userid=' . $USER->id,
     ],
     [
         'title' => get_string('preferredlanguage'),
