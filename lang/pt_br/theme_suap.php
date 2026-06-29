@@ -58,6 +58,7 @@ $string['drawer_user'] = "Menu do usuário";
 $string['allconversations'] = "todas";
 $string['unreadmessages'] = "Não lidas";
 $string['user_preference_menu'] = "Menu na parte inferior";
+$string['preference_panel'] = "Painel de preferências";
 
 $string['accessibility'] = "Acessibilidade";
 $string['dyslexia_friendly'] = "Fonte amigável a disléxicos";
