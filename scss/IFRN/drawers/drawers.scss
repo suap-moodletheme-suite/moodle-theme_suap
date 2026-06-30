@@ -134,6 +134,7 @@
         padding: 1rem;
         position: relative;
         height: 100%;
+        overflow-y: hidden;
         a {
             padding: 0.5rem 1rem;
             display: inline-block;
@@ -152,9 +153,10 @@
             background-color: var(--danger-light);
             color: var(--danger-dark);
             border-radius: 40px;
-            position: absolute;
-            bottom: 1rem;
+            position: sticky;
+            bottom: 0;
             left: 1rem;
+            z-index: 10;
             &:hover {
                 background-color: var(--danger-dark);
                 color: var(--danger-light);
@@ -190,12 +192,22 @@
             left: .8rem;
         }
     }
-    .usermenu, #usermenu-carousel, .carousel-inner, .carousel-item {
+    .usermenu, #usermenu-carousel, .carousel-inner {
         height: 100%;
         position: static;
     }
+    .carousel-item {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .carousel-item.active,
+    .carousel-item-next,
+    .carousel-item-prev {
+        display: flex;
+        flex-direction: column;
+    }
     #settingsvisual {
-        padding-bottom: .5rem;
+        padding: .5rem 1rem;
         .prefer-counter-title {
             font: var(--font-heading3);
         }
@@ -225,6 +237,11 @@
         height: calc(100vh - 189px);
         padding: 1rem;
     }
+}
+
+#drawer-user .drawer-list {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 #nav-notification-popover-container {

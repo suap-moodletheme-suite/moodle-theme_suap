@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(["core_user/repository"], function(RepositoryUser) {
+define(["core_user/repository", "core/pubsub", "core_message/message_drawer_events"], function(RepositoryUser, PubSub, MessageDrawerEvents) {
     const body = document.body;
     const breakpointSM = 768;
     let backdrop = document.querySelector('[data-region="suap-backdrop"]');
@@ -235,6 +235,19 @@ define(["core_user/repository"], function(RepositoryUser) {
 
         // Para livro
         openBlocksOnFirstPage('/mod/book/view.php', 'chapterid');
+
+        // Listen for Moodle's message drawer events to open the custom drawer
+        const openMessageDrawer = () => {
+            const messageToggler = document.querySelector('[data-drawer="drawer-messages"]');
+            if (messageToggler && !messageToggler.classList.contains('active-toggler')) {
+                messageToggler.click();
+            }
+        };
+
+        PubSub.subscribe(MessageDrawerEvents.SHOW, openMessageDrawer);
+        PubSub.subscribe(MessageDrawerEvents.SHOW_CONVERSATION, openMessageDrawer);
+        PubSub.subscribe(MessageDrawerEvents.SHOW_SETTINGS, openMessageDrawer);
+        PubSub.subscribe(MessageDrawerEvents.CREATE_CONVERSATION_WITH_USER, openMessageDrawer);
 
     };
 
