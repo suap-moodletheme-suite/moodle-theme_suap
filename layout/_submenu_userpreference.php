@@ -64,6 +64,10 @@ $preferences_submenu = [
         'url' => '/user/forum.php',
     ],
     [
+        'title' => get_string('messagepreferences', 'message'),
+        'url' => '/message/edit.php?id=' . $USER->id,
+    ],
+    [
         'title' => get_string('notificationpreferences', 'message'),
         'url' => '/message/notificationpreferences.php?userid=' . $USER->id,
     ],
