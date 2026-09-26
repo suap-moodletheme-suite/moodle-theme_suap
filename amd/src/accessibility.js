@@ -25,37 +25,15 @@
 define(["core/str", "core_user/repository", "core/config"], function(str, Repository, Config) {
 
     /**
-     *
-     */
-    function activeAccessibility() {
-        let checkboxes = document.querySelectorAll('.custom-checkbox-access input[type="checkbox"]');
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (event) => {
-                let target = event.target;
-                const checked = target.checked;
-                const className = `accessibility_${target.id}`;
-                const prefName = `theme_suap_accessibility_${target.id}`;
-
-                if (checked) {
-                    document.body.classList.add(className);
-                } else {
-                    document.body.classList.remove(className);
-                }
-
-                Repository.setUserPreference(prefName, checked);
-                syncPreference(target.id, checked);
-            });
-        });
-    }
-
-    /**
      * Sincroniza as preferências de acessibilidade
      *
      * @param {string} key A chave da preferência
      * @param {boolean|string|number} value O valor a ser salvo
      */
     function syncPreference(key, value) {
+        if (!Config.userId || Config.userId === "0" || Config.isguest) {
+            return;
+        }
 
         const encodedValue = typeof value === 'boolean'
             ? (value ? 'true' : 'false')
@@ -77,17 +55,6 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         });
     }
 
-
-    const container = document.getElementById('selector-cycle-access');
-    const zoomValue = document.getElementById('zoom-value');
-    const indicators = document.getElementById('cycle-indicators');
-    const button = document.getElementById('cycle-toggle');
-
-    const colorContainer = document.getElementById('selector-cycle-color');
-    const colorLabel = document.getElementById('color-mode-label');
-    const colorIndicators = document.getElementById('color-indicators');
-    const colorButton = document.getElementById('color-mode-toggle');
-
     let colorPreferences = {
         color_mode: 'default',
         color_mode_options: ['default', 'high_contrast', 'low_contrast', 'colorblind', 'grayscale'],
@@ -98,90 +65,109 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         zoom_options: [100, 120, 130, 150, 160]
     };
 
-    Repository.getUserPreference('theme_suap_accessibility_zoom_level').then(value => {
-        if (value) {
-            preferences.zoom_level = parseInt(value);
-        }
-
-        button.addEventListener('click', cycleAccessibility);
-
-        renderZoom();
-    });
-
-    Repository.getUserPreference('theme_suap_accessibility_color_mode').then(value => {
-        if (value) {
-            colorPreferences.color_mode = value;
-        }
-
-        colorButton.addEventListener('click', cycleColorMode);
-
-        renderColorMode();
-    });
-
-
     /**
      *
      */
-    function renderZoom() {
-        // Atualizar classe ativa do container
-        if (preferences.zoom_level > 100) {
-            container.classList.add('active');
-        } else {
-            container.classList.remove('active');
-        }
+    function activeAccessibility() {
+        let checkboxes = document.querySelectorAll('.custom-checkbox-access input[type="checkbox"]');
 
-        // Atualizar valor do zoom
-        zoomValue.textContent = preferences.zoom_level + '%';
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+                let target = event.target;
+                const checked = target.checked;
+                const className = `accessibility_${target.id}`;
+                const prefName = `theme_suap_accessibility_${target.id}`;
 
-        // Renderizar indicadores
-        indicators.innerHTML = ''; // Limpar antes de recriar
-        preferences.zoom_options
-        .filter(level => level > 100)
-        .forEach(level => {
-            const span = document.createElement('span');
-            span.classList.add('cycle-indicator');
-            if (level <= preferences.zoom_level) {
-                span.classList.add('active');
-            }
-            indicators.appendChild(span);
+                if (checked) {
+                    document.body.classList.add(className);
+                } else {
+                    document.body.classList.remove(className);
+                }
+
+                if (Config.userId && Config.userId !== "0" && !Config.isguest) {
+                    Repository.setUserPreference(prefName, checked).catch(() => {});
+                }
+                syncPreference(target.id, checked);
+            });
         });
     }
 
     /**
      *
      */
+    function renderZoom() {
+        const container = document.getElementById('selector-cycle-access');
+        const zoomValue = document.getElementById('zoom-value');
+        const indicators = document.getElementById('cycle-indicators');
+
+        if (container) {
+            if (preferences.zoom_level > 100) {
+                container.classList.add('active');
+            } else {
+                container.classList.remove('active');
+            }
+        }
+
+        if (zoomValue) {
+            zoomValue.textContent = preferences.zoom_level + '%';
+        }
+
+        if (indicators) {
+            indicators.innerHTML = '';
+            preferences.zoom_options
+            .filter(level => level > 100)
+            .forEach(level => {
+                const span = document.createElement('span');
+                span.classList.add('cycle-indicator');
+                if (level <= preferences.zoom_level) {
+                    span.classList.add('active');
+                }
+                indicators.appendChild(span);
+            });
+        }
+    }
+
+    /**
+     *
+     */
     function renderColorMode() {
+        const colorContainer = document.getElementById('selector-cycle-color');
+        const colorLabel = document.getElementById('color-mode-label');
+        const colorIndicators = document.getElementById('color-indicators');
         const mode = colorPreferences.color_mode;
 
-        // Atualiza o rótulo
         const labels = {
             "default": 'Padrão',
             high_contrast: 'Alto contraste',
             low_contrast: 'Contraste reduzido',
             colorblind: 'Amigável a daltônicos',
             grayscale: 'Escala de cinza',
-            // Dark_mode: 'Modo escuro',
         };
 
-        colorLabel.textContent = labels[mode] || 'Padrão';
+        if (colorLabel) {
+            colorLabel.textContent = labels[mode] || 'Padrão';
+        }
 
-        // Atualiza os indicadores visuais
-        colorIndicators.innerHTML = '';
-        colorPreferences.color_mode_options
-            .filter(m => m !== 'default')
-            .forEach(m => {
-                const span = document.createElement('span');
-                span.classList.add('cycle-indicator');
-                if (m === mode) {
-                    span.classList.add('active');
-                }
-                colorIndicators.appendChild(span);
-            });
+        if (colorIndicators) {
+            colorIndicators.innerHTML = '';
+            colorPreferences.color_mode_options
+                .filter(m => m !== 'default')
+                .forEach(m => {
+                    const span = document.createElement('span');
+                    span.classList.add('cycle-indicator');
+                    if (m === mode) {
+                        span.classList.add('active');
+                    }
+                    colorIndicators.appendChild(span);
+                });
+        }
 
-        if (mode !== 'default') {
-            colorContainer.classList.add('active');
-        } else {
-            colorContainer.classList.remove('active');
+        if (colorContainer) {
+            if (mode !== 'default') {
+                colorContainer.classList.add('active');
+            } else {
+                colorContainer.classList.remove('active');
+            }
         }
     }
 
@@ -193,10 +179,11 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         const nextIndex = (currentIndex + 1) % preferences.zoom_options.length;
         preferences.zoom_level = preferences.zoom_options[nextIndex];
 
-        Repository.setUserPreference('theme_suap_accessibility_zoom_level', preferences.zoom_level);
+        if (Config.userId && Config.userId !== "0" && !Config.isguest) {
+            Repository.setUserPreference('theme_suap_accessibility_zoom_level', preferences.zoom_level).catch(() => {});
+        }
         syncPreference('zoom_level', preferences.zoom_level);
 
-        // Atualizar atributo no body
         document.body.setAttribute('data-zoom', preferences.zoom_level);
 
         renderZoom();
@@ -211,11 +198,11 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
         const nextIndex = (currentIndex + 1) % modes.length;
         colorPreferences.color_mode = modes[nextIndex];
 
-        // Salvar no Moodle
-        Repository.setUserPreference('theme_suap_accessibility_color_mode', colorPreferences.color_mode);
+        if (Config.userId && Config.userId !== "0" && !Config.isguest) {
+            Repository.setUserPreference('theme_suap_accessibility_color_mode', colorPreferences.color_mode).catch(() => {});
+        }
         syncPreference('color_mode', colorPreferences.color_mode);
 
-        // --- Atualizar classes no <body>
         const allModes = colorPreferences.color_mode_options;
         allModes.forEach(m => {
             document.body.classList.remove(`accessibility_color_mode_${m}`);
@@ -230,33 +217,62 @@ define(["core/str", "core_user/repository", "core/config"], function(str, Reposi
      *
      */
     function syncInputWithBody() {
-
         document.querySelectorAll('.custom-checkbox-access input[type="checkbox"]').forEach(input => {
             input.checked = false;
         });
 
         document.body.classList.forEach(cls => {
-
             if (cls.startsWith('accessibility_')) {
-
                 const id = cls.replace('accessibility_', '');
-
-                // Marca input booleano
                 const checkbox = document.getElementById(id);
                 if (checkbox && checkbox.type === "checkbox") {
                     checkbox.checked = true;
                 }
             }
-
         });
+    }
+
+    function setupAccessibility() {
+        const button = document.getElementById('cycle-toggle');
+        const colorButton = document.getElementById('color-mode-toggle');
+
+        if (button) {
+            button.addEventListener('click', cycleAccessibility);
+        }
+
+        if (colorButton) {
+            colorButton.addEventListener('click', cycleColorMode);
+        }
+
+        if (Config.userId && Config.userId !== "0" && !Config.isguest) {
+            Repository.getUserPreference('theme_suap_accessibility_zoom_level').then(value => {
+                if (value) {
+                    preferences.zoom_level = parseInt(value);
+                }
+                renderZoom();
+            }).catch(() => {
+                renderZoom();
+            });
+
+            Repository.getUserPreference('theme_suap_accessibility_color_mode').then(value => {
+                if (value) {
+                    colorPreferences.color_mode = value;
+                }
+                renderColorMode();
+            }).catch(() => {
+                renderColorMode();
+            });
+        } else {
+            renderZoom();
+            renderColorMode();
+        }
     }
 
     return {
         init: () => {
             syncInputWithBody();
-
             activeAccessibility();
-
+            setupAccessibility();
         }
     };
 
