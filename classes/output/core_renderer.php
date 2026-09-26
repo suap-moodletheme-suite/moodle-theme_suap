@@ -89,6 +89,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             'es' => '🇪🇸',
         ];
 
+        $activelanguage = '';
+        $activelanguagename = '';
+
         $nodes = [];
         foreach ($langs as $langtype => $langname) {
             $isactive = $langtype == $currentlang;
@@ -128,8 +131,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
             'langactivename' => $activelanguagename, // Nome da língua atualmente selecionada
             'langnodes' => $nodes, // Lista de idiomas disponíveis
         ];
-
-        return $this->render_from_template('theme_suap/lang_menu_flags', $data);
     }
 
     /**
